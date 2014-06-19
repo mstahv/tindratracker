@@ -98,7 +98,10 @@ public class Update {
     public void setImei(String imei) {
         this.imei = imei;
     }
-    
-    
+
+    @Override
+    public String toString() {
+        return "Update{" + "id=" + id + ", timestamp=" + timestamp + ", lon=" + lon + ", lat=" + lat + ", imei=" + imei + '}';
+    }
 
 }
