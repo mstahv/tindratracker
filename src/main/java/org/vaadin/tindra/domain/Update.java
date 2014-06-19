@@ -1,4 +1,4 @@
-package org.peimari.tindra.domain;
+package org.vaadin.tindra.domain;
 
 import com.vividsolutions.jts.geom.Point;
 import java.util.Date;
@@ -54,8 +54,10 @@ public class Update {
     
     private Double lon;
     private Double lat;
+    
+    private String imei;
 
-    protected Update() {}
+    public Update() {}
 
     public long getId() {
         return id;
@@ -87,6 +89,14 @@ public class Update {
 
     public void setLat(Double lat) {
         this.lat = lat;
+    }
+
+    public String getImei() {
+        return imei;
+    }
+
+    public void setImei(String imei) {
+        this.imei = imei;
     }
     
     

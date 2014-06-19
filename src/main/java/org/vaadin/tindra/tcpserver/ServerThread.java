@@ -1,8 +1,9 @@
-package org.vaadin.tindra;
+package org.vaadin.tindra.tcpserver;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.Socket;
+import org.vaadin.tindra.domain.Update;
 
 /**
  * Created by se on 19/06/14.
@@ -30,7 +31,8 @@ public class ServerThread extends Thread {
 
             while ((inputLine = in.readLine()) != null && server.isRunning()) {
                 update = kkp.processInput(inputLine);
-                System.out.println(update.getIMEI()); //TODO: save to database instead
+                server.persist(update);
+                System.out.println(update.getImei());
             }
 
         } catch (Exception e) {

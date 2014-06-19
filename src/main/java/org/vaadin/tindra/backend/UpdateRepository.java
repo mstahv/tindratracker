@@ -1,7 +1,7 @@
 
-package org.peimari.tindra.backend;
+package org.vaadin.tindra.backend;
 
-import org.peimari.tindra.domain.Update;
+import org.vaadin.tindra.domain.Update;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
