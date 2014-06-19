@@ -1,6 +1,7 @@
 package org.vaadin.tindra.domain;
 
 import com.vividsolutions.jts.geom.Point;
+import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -10,7 +11,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 @Entity
-public class Update {
+public class Update  implements Serializable {
     
 //      `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
 //  `device_id` int(10) unsigned NOT NULL,

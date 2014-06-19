@@ -1,5 +1,6 @@
 package org.vaadin.tindra;
 
+import com.vaadin.event.UIEvents;
 import java.util.LinkedList;
 import java.util.List;
 import javax.annotation.PostConstruct;
@@ -15,17 +16,21 @@ import org.vaadin.addon.leaflet.shared.Point;
 import org.vaadin.spring.UIScope;
 import org.vaadin.spring.VaadinComponent;
 import org.vaadin.spring.events.EventBus;
-import org.vaadin.spring.events.EventBusListener;
+import org.vaadin.tindra.backend.AppService;
 import org.vaadin.tindra.backend.UpdateRepository;
 import org.vaadin.tindra.domain.Update;
-import org.vaadin.tindra.events.PointAdded;
 
 /**
  *
  */
 @UIScope
 @VaadinComponent
-public class LiveMap extends LMap {
+public class LiveMap extends LMap implements UIEvents.PollListener {
+    
+    long lastUpdate;
+    
+    @Autowired
+    AppService appService;
 
     @Autowired
     UpdateRepository repo;
@@ -62,13 +67,13 @@ public class LiveMap extends LMap {
             zoomToContent();
         }
 
-        bus.subscribe(new EventBusListener<PointAdded>() {
-            @Override
-            public void onEvent(org.vaadin.spring.events.Event<PointAdded> event) {
-                addPoint(event.getPayload().getUpdate());
-            }
-        });
+    }
 
+    @Override
+    public void attach() {
+        super.attach();
+        getUI().setPollInterval(5000);
+        getUI().addPollListener(this);
     }
 
     private void updateHead(Update update) {
@@ -78,6 +83,7 @@ public class LiveMap extends LMap {
         } else {
             marker.setPoint(new Point(update.getLat(), update.getLon()));
         }
+        lastUpdate = update.getId();
     }
 
     private void addPoint(Update u) {
@@ -87,5 +93,12 @@ public class LiveMap extends LMap {
             updates.remove();
         }
         snake.setPoints(updates.toArray(new Point[0]));
+    }
+
+    @Override
+    public void poll(UIEvents.PollEvent event) {
+        if(appService.getLastUpdate() != null && appService.getLastUpdate() !=  lastUpdate) {
+            updateHead(repo.findOne(appService.getLastUpdate()));
+        }
     }
 }

@@ -5,11 +5,19 @@
  */
 package org.vaadin.tindra.backend;
 
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 @Service
-@Scope(value = "session")
 public class AppService {
+    
+    private Long lastUpdate;
 
+    public Long getLastUpdate() {
+        return lastUpdate;
+    }
+
+    public void setLastUpdate(Long lastUpdate) {
+        this.lastUpdate = lastUpdate;
+    }
+    
 }

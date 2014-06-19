@@ -8,6 +8,7 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.vaadin.tindra.backend.AppService;
 import org.vaadin.tindra.backend.UpdateRepository;
 import org.vaadin.tindra.domain.Update;
 
@@ -19,6 +20,9 @@ public class Server {
 
     @Autowired
     UpdateRepository repo;
+    
+    @Autowired
+    AppService appService;
 
     private final int portNumber;
     private boolean running = false;
@@ -70,7 +74,8 @@ public class Server {
     }
 
     void persist(Update update) {
-        repo.save(update);
+        Update saved = repo.save(update);
+        appService.setLastUpdate(saved.getId());
     }
 
 }
