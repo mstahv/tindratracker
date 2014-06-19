@@ -26,9 +26,9 @@ import org.vaadin.tindra.domain.Update;
 @UIScope
 @VaadinComponent
 public class LiveMap extends LMap implements UIEvents.PollListener {
-    
+
     long lastUpdate;
-    
+
     @Autowired
     AppService appService;
 
@@ -58,12 +58,12 @@ public class LiveMap extends LMap implements UIEvents.PollListener {
             if (first) {
                 updateHead(update);
                 first = false;
-            }
+                setZoomLevel(14);
+                 setCenter(new Point(update.getLat(), update.getLon()));
+             }
         }
         if (marker != null) {
             snake.setPoints(updates.toArray(new Point[0]));
-            addLayer(snake);
-            addLayer(marker);
             zoomToContent();
         }
 
@@ -80,6 +80,7 @@ public class LiveMap extends LMap implements UIEvents.PollListener {
         if (marker == null) {
             marker = new LCircleMarker(new Point(update.getLat(), update.
                     getLon()), 10);
+            addLayer(marker);
         } else {
             marker.setPoint(new Point(update.getLat(), update.getLon()));
         }
@@ -88,16 +89,22 @@ public class LiveMap extends LMap implements UIEvents.PollListener {
 
     private void addPoint(Update u) {
         updateHead(u);
+        
         updates.add(new Point(u.getLat(), u.getLon()));
         if (updates.size() > 20) {
             updates.remove();
         }
         snake.setPoints(updates.toArray(new Point[0]));
+        if(snake.getParent() == null) {
+            addLayer(snake);
+        }
+        setZoomLevel(14);
+        setCenter(new Point(u.getLat(), u.getLon()));
     }
 
     @Override
     public void poll(UIEvents.PollEvent event) {
-        if(appService.getLastUpdate() != null && appService.getLastUpdate() !=  lastUpdate) {
+        if (appService.getLastUpdate() != null && appService.getLastUpdate() != lastUpdate) {
             updateHead(repo.findOne(appService.getLastUpdate()));
         }
     }
