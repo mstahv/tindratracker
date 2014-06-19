@@ -32,7 +32,6 @@ public class ServerThread extends Thread {
             while ((inputLine = in.readLine()) != null && server.isRunning()) {
                 update = kkp.processInput(inputLine);
                 server.persist(update);
-                System.out.println(update.getImei());
             }
 
         } catch (Exception e) {

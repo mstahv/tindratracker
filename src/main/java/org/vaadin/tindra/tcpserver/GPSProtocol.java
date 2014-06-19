@@ -1,5 +1,6 @@
 package org.vaadin.tindra.tcpserver;
 
+import org.geotools.measure.AngleFormat;
 import org.vaadin.tindra.domain.Update;
 
 import java.text.DateFormat;
@@ -12,23 +13,39 @@ import java.util.Date;
  */
 public class GPSProtocol {
 
-    DateFormat format = new SimpleDateFormat("YYMMddHHmmss");
+    DateFormat format = new SimpleDateFormat("yyMMddHHmmss");
+
+    AngleFormat latFormat = new AngleFormat("DDMM.mmmmm");
+    AngleFormat lonFormat = new AngleFormat("DDDMM.mmmmm");
 
     public Update processInput(String input) {
         Update out = new Update();
 
         String[] parts = input.split(",");
 
-        out.setId(Long.parseLong(parts[0]));
-        out.setLat(Double.parseDouble(parts[5]));
-        out.setLon(Double.parseDouble(parts[7]));
         try {
             Date ts = format.parse(parts[0]);
             out.setTimestamp(ts);
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        out.setImei(parts[17]);
+
+        try {
+            out.setLat(latFormat.parse(parts[5]).degrees());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        try {
+            out.setLon(lonFormat.parse(parts[7]).degrees());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            out.setImei(parts[17].split(":")[1]);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return out;
     }
 
