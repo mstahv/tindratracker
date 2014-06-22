@@ -5,7 +5,7 @@
 
     <groupId>org.peimari</groupId>
     <artifactId>tindratracker</artifactId>
-    <version>0.0.3-SNAPSHOT</version>
+    <version>0.0.5-SNAPSHOT</version>
 
     <name>TindraTracker</name>
     <description>An application to track official Vaadin Sailing Boat</description>
