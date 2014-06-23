@@ -53,20 +53,15 @@
             <artifactId>spring-boot-vaadin</artifactId>
             <version>0.0.2-SNAPSHOT</version>
         </dependency>
-<!--        <dependency>
+        <dependency>
             <groupId>org.vaadin.spring</groupId>
             <artifactId>spring-vaadin-touchkit</artifactId>
             <version>0.0.2-SNAPSHOT</version>
-        </dependency>-->
-        <dependency>
-            <groupId>org.peimari</groupId>
-            <artifactId>dawn</artifactId>
-            <version>1</version>
         </dependency>
         <dependency>
-            <groupId>com.vaadin</groupId>
-            <artifactId>vaadin-client-compiled</artifactId>
-            <version>${version.vaadin}</version>
+            <groupId>com.vaadin.addon</groupId>
+            <artifactId>vaadin-touchkit-agpl</artifactId>
+            <version>4.0.0.beta1</version>
         </dependency>
         <dependency>
             <groupId>com.vaadin</groupId>

@@ -2,7 +2,6 @@ package org.vaadin.tindra;
 
 import org.apache.catalina.connector.Connector;
 import org.apache.coyote.http11.AbstractHttp11Protocol;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.context.embedded.ConfigurableEmbeddedServletContainer;
@@ -15,15 +14,14 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.http.MediaType;
-import org.vaadin.addon.leaflet.LTileLayer;
-import org.vaadin.addon.leaflet.util.AbstractJTSField;
-import org.vaadin.tindra.tcpserver.Server;
+import org.vaadin.spring.boot.EnableTouchKitServlet;
 
 @Configuration
 @ComponentScan
 @EnableAutoConfiguration
 @EnableConfigurationProperties
 @EnableJpaRepositories
+@EnableTouchKitServlet
 public class Application {
 
     public static void main(String[] args) {
