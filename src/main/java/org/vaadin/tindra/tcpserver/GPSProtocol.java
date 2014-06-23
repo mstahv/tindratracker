@@ -23,11 +23,23 @@ public class GPSProtocol {
 
         String[] parts = input.split(",");
 
-        Date ts = format.parse(parts[0]);
-        out.setTimestamp(ts);
+        out.setValid("A".equals(parts[4]));
+
+        String ts = parts[11] + parts[3].substring(0,6);
+        out.setTimestamp(format.parse(ts));
 
         out.setLat(latFormat.parse(parts[5]).degrees());
+        out.setLat(out.getLat()*("S".equals(parts[6])?-1:1));
         out.setLon(lonFormat.parse(parts[7]).degrees());
+        out.setLon(out.getLon()*("W".equals(parts[8])?-1:1));
+
+        out.setSpeed(Double.parseDouble(parts[9]));
+        out.setSpeed(Double.parseDouble(parts[10]));
+        out.setAltitude(Double.parseDouble(parts[19]));
+
+        out.setSignalLevel("F".equals(parts[15])?1d:0d);
+        out.setBatteryLevel(Double.parseDouble(parts[20].substring(2).replaceAll("V","")));
+        out.setCharging("1".equals(parts[21]));
 
         out.setImei(parts[17].split(":")[1]);
         return out;
