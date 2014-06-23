@@ -18,34 +18,18 @@ public class GPSProtocol {
     AngleFormat latFormat = new AngleFormat("DDMM.mmmmm");
     AngleFormat lonFormat = new AngleFormat("DDDMM.mmmmm");
 
-    public Update processInput(String input) {
+    public Update processInput(String input) throws ParseException {
         Update out = new Update();
 
         String[] parts = input.split(",");
 
-        try {
-            Date ts = format.parse(parts[0]);
-            out.setTimestamp(ts);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+        Date ts = format.parse(parts[0]);
+        out.setTimestamp(ts);
 
-        try {
-            out.setLat(latFormat.parse(parts[5]).degrees());
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        try {
-            out.setLon(lonFormat.parse(parts[7]).degrees());
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+        out.setLat(latFormat.parse(parts[5]).degrees());
+        out.setLon(lonFormat.parse(parts[7]).degrees());
 
-        try {
-            out.setImei(parts[17].split(":")[1]);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        out.setImei(parts[17].split(":")[1]);
         return out;
     }
 

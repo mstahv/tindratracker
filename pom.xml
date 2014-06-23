@@ -5,7 +5,7 @@
 
     <groupId>org.peimari</groupId>
     <artifactId>tindratracker</artifactId>
-    <version>0.0.2-SNAPSHOT</version>
+    <version>0.0.5-SNAPSHOT</version>
 
     <name>TindraTracker</name>
     <description>An application to track official Vaadin Sailing Boat</description>
@@ -14,7 +14,6 @@
         <start-class>org.vaadin.tindra.Application</start-class>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <java.version>1.7</java.version>
         <version.vaadin>7.2.2</version.vaadin>
         <vaadin.plugin.version>7.1.11</vaadin.plugin.version>
         <geotools.version>10.2</geotools.version>
@@ -136,8 +135,8 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
+                    <source>1.8</source>
+                    <target>1.8</target>
                 </configuration>
             </plugin>
             
