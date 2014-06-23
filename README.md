@@ -1,4 +1,4 @@
-# CollaMap
+# TindraTracker
 
 Simple GPS tracking application using the following technologies:
 
