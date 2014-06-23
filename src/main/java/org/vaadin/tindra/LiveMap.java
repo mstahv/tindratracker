@@ -52,7 +52,7 @@ public class LiveMap extends LMap implements UIEvents.PollListener {
 
     private final LinkedList<Coordinate> updates = new LinkedList<>();
 
-    private GeometryFactory geometryFactory = JTSFactoryFinder.getGeometryFactory(
+    private final GeometryFactory geometryFactory = JTSFactoryFinder.getGeometryFactory(
             null);
 
     public LiveMap() {
@@ -64,8 +64,6 @@ public class LiveMap extends LMap implements UIEvents.PollListener {
     @PostConstruct
     void init() {
         addLayer(new LOpenStreetMapLayer());
-//        addLayer(new LTileLayer(
-//                "http://v3.tahvonen.fi/mvm71/tiles/peruskartta/{z}/{x}/{y}.png"));
         initRoute();
     }
 

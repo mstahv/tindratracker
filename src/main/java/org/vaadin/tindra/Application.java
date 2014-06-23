@@ -29,6 +29,11 @@ public class Application {
         SpringApplication.run(Application.class, args);
     }
 
+    /**
+     * Configure embedded tomcat so that is use gzip for various resources.
+     * 
+     * @return 
+     */
     @Bean
     public EmbeddedServletContainerCustomizer servletContainerCustomizer() {
         return new EmbeddedServletContainerCustomizer() {

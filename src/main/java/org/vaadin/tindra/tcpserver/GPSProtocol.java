@@ -6,7 +6,6 @@ import org.vaadin.tindra.domain.Update;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 
 /**
  * Created by se on 19/06/14.

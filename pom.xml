@@ -5,7 +5,7 @@
 
     <groupId>org.peimari</groupId>
     <artifactId>tindratracker</artifactId>
-    <version>0.0.5-SNAPSHOT</version>
+    <version>0.0.6-SNAPSHOT</version>
 
     <name>TindraTracker</name>
     <description>An application to track official Vaadin Sailing Boat</description>
@@ -150,10 +150,10 @@
                     </hostedWebapp>
                     <noServer>true</noServer>
                     <!-- Remove draftCompile when project is ready -->
-                    <draftCompile>true</draftCompile>
+                    <draftCompile>false</draftCompile>
                     <persistentunitcachedir>${project.build.directory}/gwtdirt</persistentunitcachedir>
                     <compileReport>false</compileReport>
-                    <style>PRETTY</style>
+                    <style>OBF</style>
                     <strict>true</strict>
                     <!-- Symbol maps etc, not needed in vaadin app, just target them outside war -->
                     <deploy>${project.build.directory}/gwt-deploy</deploy>

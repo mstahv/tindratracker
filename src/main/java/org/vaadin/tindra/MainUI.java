@@ -24,7 +24,7 @@ import org.vaadin.tindra.tcpserver.Server;
  */
 @TouchKitUI
 @Title("Tindra Tracker")
-@Widgetset("org.peimari.maastokanta.AppWidgetSet")
+@Widgetset("org.vaadin.tindra.AppWidgetSet")
 @Theme("touchkit")
 public class MainUI extends UI {
 
