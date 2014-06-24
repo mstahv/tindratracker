@@ -33,10 +33,10 @@ public class ServerThread extends Thread {
 
             while ((inputLine = in.readLine()) != null && !inputLine.trim().isEmpty() && server.isRunning()) {
                 try {
+                    Logger.getLogger(getClass().getName()).log(Level.INFO, "MSG from device:{0}", inputLine);
                     update = kkp.processInput(inputLine);
                     server.persist(update);
                 } catch(Exception e) {
-                    Logger.getLogger(getClass().getName()).severe("Failed to parse message:" + inputLine);
                     Logger.getLogger(getClass().getName()).log(Level.SEVERE,"Failed to parse message", e);
                 }
             }

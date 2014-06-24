@@ -24,8 +24,9 @@ public class GPSProtocol {
 
         out.setValid("A".equals(parts[4]));
 
-        String ts = parts[11] + parts[3].substring(0,6);
-        out.setTimestamp(format.parse(ts));
+        //String ts = parts[11] + parts[3].substring(0,6);
+        
+        out.setTimestamp(format.parse(parts[0]));
 
         out.setLat(latFormat.parse(parts[5]).degrees());
         out.setLat(out.getLat()*("S".equals(parts[6])?-1:1));

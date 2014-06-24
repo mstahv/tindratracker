@@ -2,6 +2,8 @@ package org.vaadin.tindra.tcpserver;
 
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.util.Date;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
@@ -44,6 +46,9 @@ public class Server {
     public void start() {
 
         running = true;
+        
+        List<Update> invalidNewerThanNow = repo.findByTimestampGreaterThanOrderByTimestampDesc( new Date());
+        repo.deleteInBatch(invalidNewerThanNow);
 
             new Thread() {
 
