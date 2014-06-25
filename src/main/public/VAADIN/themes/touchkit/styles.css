@@ -1,0 +1,19 @@
+@import url(http://fonts.googleapis.com/css?family=Exo+2:400,900);
+
+.dataoverlay {
+    border: 1px solid red;
+    position: absolute;
+    bottom: 10px;
+    left: 0;
+    right: 0;
+    width: 100%;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.actionbuttons .v-label {
+    text-align: center;
+    background-color: #fff;
+    font-family: Metrophobic, Arial, serif; font-weight: 400;
+    border-radius: 3px;
+}
