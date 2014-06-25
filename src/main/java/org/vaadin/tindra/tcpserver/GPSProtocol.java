@@ -7,12 +7,12 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
-/**
- * Created by se on 19/06/14.
+/** Parsing
+ * Created by samie on 19/06/14.
  */
 public class GPSProtocol {
 
-    DateFormat format = new SimpleDateFormat("yyMMddHHmmss");
+    DateFormat format = new SimpleDateFormat("ddMMyyHHmmss");
 
     AngleFormat latFormat = new AngleFormat("DDMM.mmmmm");
     AngleFormat lonFormat = new AngleFormat("DDDMM.mmmmm");
@@ -24,9 +24,8 @@ public class GPSProtocol {
 
         out.setValid("A".equals(parts[4]));
 
-        //String ts = parts[11] + parts[3].substring(0,6);
-        
-        out.setTimestamp(format.parse(parts[0]));
+        String ts = parts[11] + parts[3].substring(0,6);
+        out.setTimestamp(format.parse(ts));
 
         out.setLat(latFormat.parse(parts[5]).degrees());
         out.setLat(out.getLat()*("S".equals(parts[6])?-1:1));
@@ -34,10 +33,11 @@ public class GPSProtocol {
         out.setLon(out.getLon()*("W".equals(parts[8])?-1:1));
 
         out.setSpeed(Double.parseDouble(parts[9]));
-        out.setSpeed(Double.parseDouble(parts[10]));
+        out.setCourse(Double.parseDouble(parts[10]));
         out.setAltitude(Double.parseDouble(parts[19]));
 
         out.setSignalLevel("F".equals(parts[15])?1d:0d);
+        out.setFixCount(Integer.parseInt(parts[18]));
         out.setBatteryLevel(Double.parseDouble(parts[20].substring(2).replaceAll("V","")));
         out.setCharging("1".equals(parts[21]));
 
