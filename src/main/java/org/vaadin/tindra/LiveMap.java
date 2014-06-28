@@ -2,25 +2,15 @@ package org.vaadin.tindra;
 
 import com.vaadin.event.UIEvents;
 import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.simplify.DouglasPeuckerSimplifier;
-import java.util.Calendar;
-import java.util.LinkedList;
-import java.util.List;
-import javax.annotation.PostConstruct;
-import org.geotools.geometry.GeometryBuilder;
 import org.geotools.geometry.jts.JTSFactoryFinder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Direction;
 import org.vaadin.addon.leaflet.LCircleMarker;
 import org.vaadin.addon.leaflet.LMap;
 import org.vaadin.addon.leaflet.LOpenStreetMapLayer;
 import org.vaadin.addon.leaflet.LPolyline;
-import org.vaadin.addon.leaflet.LTileLayer;
 import org.vaadin.addon.leaflet.shared.Point;
 import org.vaadin.spring.UIScope;
 import org.vaadin.spring.VaadinComponent;
@@ -28,6 +18,11 @@ import org.vaadin.spring.events.EventBus;
 import org.vaadin.tindra.backend.AppService;
 import org.vaadin.tindra.backend.UpdateRepository;
 import org.vaadin.tindra.domain.Update;
+
+import javax.annotation.PostConstruct;
+import java.util.Calendar;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  *
@@ -106,13 +101,6 @@ public class LiveMap extends LMap implements UIEvents.PollListener {
         addLayer(snake);
     }
 
-    @Override
-    public void attach() {
-        super.attach();
-        getUI().setPollInterval(5000);
-        getUI().addPollListener(this);
-    }
-
     private void updateHead(Update update) {
         if (marker == null) {
             marker = new LCircleMarker(new Point(update.getLat(), update.
@@ -133,7 +121,7 @@ public class LiveMap extends LMap implements UIEvents.PollListener {
         if (updates.size() > 20) {
             updates.remove();
         }
-        drawSnake(null);
+        drawSnake(geometryFactory);
     }
 
     @Override
@@ -142,6 +130,15 @@ public class LiveMap extends LMap implements UIEvents.PollListener {
             final Update latest = repo.findOne(appService.getLastUpdate());
             addPoint(latest);
             zoomToContent();
+        }
+    }
+
+    public void showLastUpdate() {
+        if (appService.getLastUpdate() != null) {
+            final Update latest = repo.findOne(appService.getLastUpdate());
+            if (latest != null) {
+                setCenter(latest.getLat(), latest.getLon());
+            }
         }
     }
 }

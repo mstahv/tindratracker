@@ -1,19 +1,27 @@
-@import url(http://fonts.googleapis.com/css?family=Exo+2:400,900);
 
-.dataoverlay {
-    border: 1px solid red;
+@import url('http://fonts.googleapis.com/css?family=Exo+2:400,700');
+
+div.dataoverlay {
     position: absolute;
-    bottom: 10px;
-    left: 0;
-    right: 0;
-    width: 100%;
-    padding-left: 10px;
-    padding-right: 10px;
+    left: 10px;
+    top: 80px;
 }
 
-.actionbuttons .v-label {
-    text-align: center;
-    background-color: #fff;
-    font-family: Metrophobic, Arial, serif; font-weight: 400;
+.dataoverlay .v-label {
+    background: transparent;
+    font-family: 'Exo 2', sans-serif;
+    font-weight: 700;
+    font-size: 72px;
     border-radius: 3px;
+    text-align: left;
+}
+.dataoverlay .caption {
+    background: transparent;
+    font-family: 'Exo 2', sans-serif;
+    font-weight: 700;
+    font-size: 60px;
+    text-align: left;
+    color: #505050;
+    margin-top: -10px;
+    margin-bottom: 10px;
 }

@@ -5,6 +5,7 @@ import com.vaadin.addon.touchkit.ui.Popover;
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.Title;
 import com.vaadin.annotations.Widgetset;
+import com.vaadin.event.UIEvents;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.*;
@@ -15,8 +16,8 @@ import org.vaadin.addon.leaflet.LeafletClickEvent;
 import org.vaadin.addon.leaflet.shared.Point;
 import org.vaadin.maddon.button.MButton;
 import org.vaadin.maddon.fields.MTable;
-import org.vaadin.maddon.layouts.MHorizontalLayout;
 import org.vaadin.spring.touchkit.TouchKitUI;
+import org.vaadin.tindra.backend.AppService;
 import org.vaadin.tindra.backend.UpdateRepository;
 import org.vaadin.tindra.domain.Update;
 import org.vaadin.tindra.tcpserver.Server;
@@ -31,7 +32,7 @@ import java.text.NumberFormat;
 @Title("Tindra Tracker")
 @Widgetset("org.vaadin.tindra.AppWidgetSet")
 @Theme("touchkit")
-public class MainUI extends UI {
+public class MainUI extends UI implements UIEvents.PollListener {
 
     @Autowired
     Server server;
@@ -41,44 +42,65 @@ public class MainUI extends UI {
 
     @Autowired
     LiveMap liveMap;
-    
+
+    @Autowired
+    AppService appService;
+
     Button listLastPoints = new MButton(FontAwesome.BARS, this::listLastPoints);
+    Button trackBoat = new MButton(FontAwesome.CROSSHAIRS, this::trackBoat);
 
     Label speed = new Label(" - ");
     Label course = new Label(" - ");
-    HorizontalLayout overlay = new MHorizontalLayout(speed, course);
+    VerticalLayout overlay = new VerticalLayout(speed, course);
 
     NumberFormat speedFormat = new DecimalFormat("0.00");
     NumberFormat angleFormat = new DecimalFormat("000");
+    private boolean boatTracking = false;
 
     @Override
     protected void init(VaadinRequest request) {
-        NavigationView navigationView = new NavigationView("Tindra tracker");
+        NavigationView navigationView = new NavigationView("Tindra");
+
+        navigationView.setLeftComponent(trackBoat);
         navigationView.setRightComponent(listLastPoints);
 
+        // Overlay display for data
         speed.setSizeFull();
+        speed.setCaption("Speed");
         course.setSizeFull();
+        course.setCaption("Course");
         overlay.setVisible(false);
         overlay.setStyleName("dataoverlay");
+
         CssLayout layout = new CssLayout(liveMap, overlay);
         layout.setSizeFull();
         navigationView.setContent(layout);
 
         setContent(navigationView);
 
-        liveMap.addClickListener(this::onMapClick);
+        getUI().setPollInterval(5000);
+        getUI().addPollListener(this);
+        getUI().addPollListener(liveMap);
+
     }
 
-    public void onMapClick(LeafletClickEvent e) {
-        Point p = e.getPoint();
+    public void trackBoat(Button.ClickEvent e) {
+        boatTracking = !boatTracking;
+        overlay.setVisible(boatTracking);
+        if (boatTracking) {
+            liveMap.showLastUpdate();
+            updateOverlayData();
+        }
+    }
 
-        Update selected = findUpdateByPoint(p);
-        if (selected != null) {
-            speed.setValue(""+speedFormat.format(selected.getSpeed())+"kts");
-            course.setValue(""+angleFormat.format(selected.getCourse()));
+    private void updateOverlayData() {
+        if (appService.getLastUpdate() != null) {
+            final Update latest = repo.findOne(appService.getLastUpdate());
+             speed.setValue(""+speedFormat.format(latest.getSpeed())+" kts");
+             course.setValue(""+angleFormat.format(latest.getCourse())+" °");
         } else {
-            speed.setValue(" - ");
-            course.setValue(" - ");
+            speed.setValue("-.-- kts");
+            course.setValue("--- °");
         }
         overlay.setVisible(true);
     }
@@ -100,6 +122,13 @@ public class MainUI extends UI {
         popover.setWidth("80%");
         popover.setHeight("80%");
         popover.showRelativeTo(listLastPoints);
+    }
+
+    @Override
+    public void poll(UIEvents.PollEvent event) {
+        if (boatTracking) {
+            updateOverlayData();
+        }
     }
 
 }
