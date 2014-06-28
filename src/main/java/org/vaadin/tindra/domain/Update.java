@@ -2,21 +2,13 @@ package org.vaadin.tindra.domain;
 
 import java.io.Serializable;
 import java.util.Date;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
-@Entity
 public class Update  implements Serializable {
+    
+    private static int idCount = 0;
 
-    @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
-    private long id;
+    private long id = idCount++;
 
-    @Temporal(TemporalType.TIMESTAMP)
     private Date timestamp;
 
     private Boolean valid;

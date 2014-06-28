@@ -12,7 +12,6 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.http.MediaType;
 import org.vaadin.spring.boot.EnableTouchKitServlet;
 
@@ -20,7 +19,6 @@ import org.vaadin.spring.boot.EnableTouchKitServlet;
 @ComponentScan
 @EnableAutoConfiguration
 @EnableConfigurationProperties
-@EnableJpaRepositories
 @EnableTouchKitServlet
 public class Application {
 

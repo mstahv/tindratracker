@@ -2,23 +2,16 @@ package org.vaadin.tindra;
 
 import com.vaadin.event.UIEvents;
 import com.vividsolutions.jts.geom.Coordinate;
-import com.vividsolutions.jts.geom.Geometry;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.simplify.DouglasPeuckerSimplifier;
-import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
 import javax.annotation.PostConstruct;
-import org.geotools.geometry.GeometryBuilder;
 import org.geotools.geometry.jts.JTSFactoryFinder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Direction;
 import org.vaadin.addon.leaflet.LCircleMarker;
 import org.vaadin.addon.leaflet.LMap;
-import org.vaadin.addon.leaflet.LOpenStreetMapLayer;
 import org.vaadin.addon.leaflet.LPolyline;
 import org.vaadin.addon.leaflet.LTileLayer;
 import org.vaadin.addon.leaflet.shared.Point;
@@ -63,7 +56,8 @@ public class LiveMap extends LMap implements UIEvents.PollListener {
 
     @PostConstruct
     void init() {
-        addLayer(new LOpenStreetMapLayer());
+//        addLayer(new LOpenStreetMapLayer());
+        addLayer( new LTileLayer("http://v3.tahvonen.fi/mvm71/tiles/peruskartta/{z}/{x}/{y}.png"));
         initRoute();
     }
 
@@ -73,12 +67,7 @@ public class LiveMap extends LMap implements UIEvents.PollListener {
                 = new Coordinate[]{new Coordinate(0, 2), new Coordinate(2, 0), new Coordinate(
                             8, 6)};
 
-        Calendar cal = Calendar.getInstance();
-        cal.roll(Calendar.DATE, -7);
-        List<Update> content = repo.
-                findByTimestampGreaterThanOrderByTimestampDesc(cal.getTime());
-//        List<Update> content = repo.findAll(new PageRequest(0, 10, new Sort(
-//                Direction.DESC, "timestamp"))).getContent();
+        List<Update> content = repo.getUpdates();
         boolean first = true;
         LineString ls = null;
         for (Update update : content) {
@@ -139,9 +128,18 @@ public class LiveMap extends LMap implements UIEvents.PollListener {
     @Override
     public void poll(UIEvents.PollEvent event) {
         if (appService.getLastUpdate() != null && appService.getLastUpdate() != lastUpdate) {
-            final Update latest = repo.findOne(appService.getLastUpdate());
+            final Update latest = repo.getLatest();
             addPoint(latest);
             zoomToContent();
         }
+    }
+    
+    public Coordinate getClosest(double lat, double lon) {
+        Double d;
+        Coordinate u = null;
+        for (Coordinate c : updates) {
+            
+        }
+        return u;
     }
 }
