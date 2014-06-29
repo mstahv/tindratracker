@@ -31,7 +31,7 @@ import java.text.NumberFormat;
 @TouchKitUI
 @Title("Tindra Tracker")
 @Widgetset("org.vaadin.tindra.AppWidgetSet")
-@Theme("touchkit")
+@Theme("tindra")
 public class MainUI extends UI implements UIEvents.PollListener {
 
     @Autowired
@@ -51,7 +51,7 @@ public class MainUI extends UI implements UIEvents.PollListener {
 
     Label speed = new Label(" - ");
     Label course = new Label(" - ");
-    VerticalLayout overlay = new VerticalLayout(speed, course);
+    CssLayout overlay = new CssLayout(speed, course);
 
     NumberFormat speedFormat = new DecimalFormat("0.00");
     NumberFormat angleFormat = new DecimalFormat("000");
@@ -65,16 +65,13 @@ public class MainUI extends UI implements UIEvents.PollListener {
         navigationView.setRightComponent(listLastPoints);
 
         // Overlay display for data
-        speed.setSizeFull();
         speed.setCaption("Speed");
-        course.setSizeFull();
         course.setCaption("Course");
         overlay.setVisible(false);
         overlay.setStyleName("dataoverlay");
-
-        CssLayout layout = new CssLayout(liveMap, overlay);
-        layout.setSizeFull();
-        navigationView.setContent(layout);
+        final CssLayout cssLayout = new CssLayout(liveMap, overlay);
+        cssLayout.setSizeFull();
+        navigationView.setContent(cssLayout);
 
         setContent(navigationView);
 

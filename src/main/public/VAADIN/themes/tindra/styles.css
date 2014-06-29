@@ -11,15 +11,15 @@ div.dataoverlay {
     background: transparent;
     font-family: 'Exo 2', sans-serif;
     font-weight: 700;
-    font-size: 72px;
+    font-size: 32px;
     border-radius: 3px;
     text-align: left;
 }
-.dataoverlay .caption {
+.dataoverlay .v-captiontext {
     background: transparent;
     font-family: 'Exo 2', sans-serif;
     font-weight: 700;
-    font-size: 60px;
+    font-size: 16px;
     text-align: left;
     color: #505050;
     margin-top: -10px;
