@@ -1,5 +1,7 @@
 # TindraTracker
 
+![iPhone Retina](https://raw.githubusercontent.com/mstahv/tindratracker/master/iphone-screenshot.png "Mobile tracking app")
+
 Simple GPS tracking application using the following technologies:
 
  * Java 8 & JPA

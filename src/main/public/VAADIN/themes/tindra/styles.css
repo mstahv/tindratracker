@@ -7,21 +7,46 @@ div.dataoverlay {
     top: 80px;
 }
 
-.dataoverlay .v-label {
+div.statusoverlay {
+    position: absolute;
+    left: 10px;
+    bottom: 20px;
+}
+
+.dataoverlay .v-label,
+.statusoverlay .v-label {
     background: transparent;
     font-family: 'Exo 2', sans-serif;
     font-weight: 700;
-    font-size: 32px;
+    font-size: 5.1vw;
     border-radius: 3px;
     text-align: left;
 }
-.dataoverlay .v-captiontext {
+
+.dataoverlay>.v-caption>.v-captiontext,
+.statusoverlay>.v-caption>.v-captiontext {
     background: transparent;
     font-family: 'Exo 2', sans-serif;
-    font-weight: 700;
-    font-size: 16px;
+    font-weight: 400;
+    font-size: 4vw;
     text-align: left;
     color: #505050;
-    margin-top: -10px;
-    margin-bottom: 10px;
+    margin: 0; !important;
+    margin-top: 10px; !important;
+}
+
+
+.statusoverlay .v-label {
+    font-size: 3.1vmin;
+}
+.statusoverlay>.v-caption>.v-captiontext {
+    font-size: 3.5vmin;
+}
+
+
+.statusoverlay .levelindicator {
+    width: 20%;
+    height: 35px;
+    max-width: 100px;
+    min-width: 40px;
 }
