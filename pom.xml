@@ -96,6 +96,12 @@
         </dependency>
 
         <dependency>
+            <groupId>org.vaadin.addon</groupId>
+            <artifactId>levelindicator</artifactId>
+            <version>0.0.2</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.geotools</groupId>
             <artifactId>gt-opengis</artifactId>
             <version>10.2</version>

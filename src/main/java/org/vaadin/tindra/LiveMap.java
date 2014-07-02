@@ -52,8 +52,8 @@ public class LiveMap extends LMap implements UIEvents.PollListener {
 
     public LiveMap() {
         setHeight("100%");
-        setCenter(60.449, 22.221);
-        setZoomLevel(14);
+        setCenter(60.375, 22.125);
+        setZoomLevel(13);
     }
 
     @PostConstruct
