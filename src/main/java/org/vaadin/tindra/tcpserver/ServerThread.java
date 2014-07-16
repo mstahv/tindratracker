@@ -1,6 +1,7 @@
 package org.vaadin.tindra.tcpserver;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 import java.util.logging.Level;
@@ -11,6 +12,7 @@ import org.vaadin.tindra.domain.Update;
  * Created by se on 19/06/14.
  */
 public class ServerThread extends Thread {
+
     private final Server server;
     private Socket socket = null;
 
@@ -31,18 +33,31 @@ public class ServerThread extends Thread {
             // Initiate conversation with client
             GPSProtocol kkp = new GPSProtocol();
 
-            while ((inputLine = in.readLine()) != null && !inputLine.trim().isEmpty() && server.isRunning()) {
+            while ((inputLine = in.readLine()) != null && server.isRunning()) {
                 try {
-                    Logger.getLogger(getClass().getName()).log(Level.INFO, "MSG from device:{0}", inputLine);
-                    update = kkp.processInput(inputLine);
-                    server.persist(update);
-                } catch(Exception e) {
-                    Logger.getLogger(getClass().getName()).log(Level.SEVERE,"Failed to parse message", e);
+                    inputLine = inputLine.trim();
+                    if (!inputLine.isEmpty()) {
+                        Logger.getLogger(getClass().getName()).log(Level.INFO,
+                                "MSG from device:{0}", inputLine);
+                        update = kkp.processInput(inputLine);
+                        server.persist(update);
+                    }
+                } catch (Exception e) {
+                    Logger.getLogger(getClass().getName()).log(Level.SEVERE,
+                            "Failed to parse message", e);
                 }
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE,
+                    "Failed to parse message2", e);
+        } finally {
+            try {
+                socket.close();
+            } catch (IOException ex) {
+                Logger.getLogger(ServerThread.class.getName()).
+                        log(Level.SEVERE, null, ex);
+            }
         }
     }
 }

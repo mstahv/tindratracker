@@ -5,7 +5,7 @@
 
     <groupId>org.peimari</groupId>
     <artifactId>tindratracker</artifactId>
-    <version>0.0.10-SNAPSHOT</version>
+    <version>0.0.11-SNAPSHOT</version>
 
     <name>TindraTracker</name>
     <description>An application to track official Vaadin Sailing Boat</description>
@@ -61,7 +61,7 @@
         <dependency>
             <groupId>com.vaadin.addon</groupId>
             <artifactId>vaadin-touchkit-agpl</artifactId>
-            <version>4.0.0.beta1</version>
+            <version>4.0.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.vaadin</groupId>

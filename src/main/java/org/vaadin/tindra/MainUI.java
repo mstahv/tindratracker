@@ -1,5 +1,7 @@
 package org.vaadin.tindra;
 
+import com.vaadin.addon.touchkit.ui.NavigationButton;
+import com.vaadin.addon.touchkit.ui.NavigationManager;
 import com.vaadin.addon.touchkit.ui.NavigationView;
 import com.vaadin.addon.touchkit.ui.Popover;
 import com.vaadin.annotations.Theme;
@@ -12,7 +14,13 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.UI;
+import java.text.DateFormat;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.vaadin.addon.leaflet.shared.Point;
@@ -24,11 +32,6 @@ import org.vaadin.tindra.backend.AppService;
 import org.vaadin.tindra.backend.UpdateRepository;
 import org.vaadin.tindra.domain.Update;
 import org.vaadin.tindra.tcpserver.Server;
-
-import java.text.DateFormat;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
-import java.text.SimpleDateFormat;
 
 /**
  *
@@ -51,21 +54,22 @@ public class MainUI extends UI implements UIEvents.PollListener {
     @Autowired
     AppService appService;
 
-    Button listLastPoints = new MButton(FontAwesome.BARS, this::listLastPoints);
+    NavigationButton listLastPoints = new NavigationButton();
     Button trackBoat = new MButton(FontAwesome.CROSSHAIRS, this::trackBoat);
 
     Label speed = new Label(" - ");
     Label course = new Label(" - ");
-    Levelindicator fixCount = new Levelindicator(5,0);
-    Levelindicator batteryLevel = new Levelindicator(5,0);
+    Levelindicator fixCount = new Levelindicator(5, 0);
+    Levelindicator batteryLevel = new Levelindicator(5, 0);
     Label lastUpdate = new Label("---------- --:--");
     CssLayout trackingOverlay = new CssLayout(speed, course);
-    CssLayout statusOverlay = new CssLayout(fixCount, batteryLevel,lastUpdate);
+    CssLayout statusOverlay = new CssLayout(fixCount, batteryLevel, lastUpdate);
 
     NumberFormat speedFormat = new DecimalFormat("0.00");
     NumberFormat angleFormat = new DecimalFormat("000");
     private boolean boatTracking = false;
     private DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+    private NavigationManager navigationManager;
 
     @Override
     protected void init(VaadinRequest request) {
@@ -85,11 +89,24 @@ public class MainUI extends UI implements UIEvents.PollListener {
         trackingOverlay.setVisible(false);
         trackingOverlay.setStyleName("dataoverlay");
         statusOverlay.setStyleName("statusoverlay");
-        final CssLayout cssLayout = new CssLayout(liveMap, statusOverlay, trackingOverlay);
+        final CssLayout cssLayout = new CssLayout(liveMap, statusOverlay,
+                trackingOverlay);
         cssLayout.setSizeFull();
         navigationView.setContent(cssLayout);
 
-        setContent(navigationView);
+        navigationManager = new NavigationManager();
+        navigationManager.navigateTo(navigationView);
+        setContent(navigationManager);
+
+        // listLastPoints.setIcon(FontAwesome.BARS); // FIXME, this looks bad
+        listLastPoints.setCaption("Last points");
+        listLastPoints.addClickListener(e -> {
+            // FIXME reusing the same view seems to be broken in latest touchkit
+            navigationManager.navigateTo(new TabularView(repo.findAll(
+                    new PageRequest(0, 100, new Sort(
+                                    Sort.Direction.DESC, "timestamp"))).
+                    getContent()));
+        });
 
         getUI().setPollInterval(5000);
         getUI().addPollListener(this);
@@ -103,7 +120,7 @@ public class MainUI extends UI implements UIEvents.PollListener {
         statusOverlay.setVisible(false);
         statusOverlay.setVisible(true);
         if (boatTracking) {
-            liveMap.showLastUpdate();
+            liveMap.centerToLastPoint();
             updateBoatData();
         }
     }
@@ -111,8 +128,8 @@ public class MainUI extends UI implements UIEvents.PollListener {
     private void updateBoatData() {
         if (appService.getLastUpdate() != null) {
             final Update latest = repo.findOne(appService.getLastUpdate());
-             speed.setValue("" + speedFormat.format(latest.getSpeed()) + " kts");
-             course.setValue("" + angleFormat.format(latest.getCourse()) + " °");
+            speed.setValue("" + speedFormat.format(latest.getSpeed()) + " kts");
+            course.setValue("" + angleFormat.format(latest.getCourse()) + " °");
         } else {
             speed.setValue("-.-- kts");
             course.setValue("--- °");
@@ -124,7 +141,8 @@ public class MainUI extends UI implements UIEvents.PollListener {
         if (appService.getLastUpdate() != null) {
             final Update latest = repo.findOne(appService.getLastUpdate());
             fixCount.setFilledBars(levelFromFixCoun(latest.getFixCount()));
-            batteryLevel.setFilledBars(levelFromBattery(latest.getBatteryLevel()));
+            batteryLevel.setFilledBars(
+                    levelFromBattery(latest.getBatteryLevel()));
             lastUpdate.setValue(dateFormat.format(latest.getTimestamp()));
         } else {
             fixCount.setFilledBars(0);
@@ -137,7 +155,7 @@ public class MainUI extends UI implements UIEvents.PollListener {
         if (fixCount > 10) {
             return 5;
         } else if (fixCount > 2) {
-            return fixCount/2;
+            return fixCount / 2;
         }
         return 0;
     }
@@ -165,9 +183,10 @@ public class MainUI extends UI implements UIEvents.PollListener {
     }
 
     private void listLastPoints(Button.ClickEvent e) {
-        Popover popover = new Popover(new NavigationView("Last points", new MTable<>(Update.class)
+        Popover popover = new Popover(new NavigationView("Last points",
+                new MTable<>(Update.class)
                 .setBeans(repo.findAll(new PageRequest(0, 100, new Sort(
-                        Sort.Direction.DESC, "timestamp"))).
+                                                Sort.Direction.DESC, "timestamp"))).
                         getContent())
                 .withFullHeight().withFullWidth()));
         popover.setModal(true);
@@ -180,6 +199,7 @@ public class MainUI extends UI implements UIEvents.PollListener {
     public void poll(UIEvents.PollEvent event) {
         if (boatTracking) {
             updateBoatData();
+            liveMap.centerToLastPoint();
         }
         updateStatusData();
     }

@@ -47,8 +47,9 @@ public class LiveMap extends LMap implements UIEvents.PollListener {
 
     private final LinkedList<Coordinate> updates = new LinkedList<>();
 
-    private final GeometryFactory geometryFactory = JTSFactoryFinder.getGeometryFactory(
-            null);
+    private final GeometryFactory geometryFactory = JTSFactoryFinder.
+            getGeometryFactory(
+                    null);
 
     public LiveMap() {
         setHeight("100%");
@@ -77,7 +78,7 @@ public class LiveMap extends LMap implements UIEvents.PollListener {
         boolean first = true;
         LineString ls = null;
         for (Update update : content) {
-            updates.add(new Coordinate(update.getLon(), update.getLat()));
+            updates.addFirst(new Coordinate(update.getLon(), update.getLat()));
             if (first) {
                 updateHead(update);
                 first = false;
@@ -87,18 +88,21 @@ public class LiveMap extends LMap implements UIEvents.PollListener {
 
         if (marker != null) {
             drawSnake(geometryFactory);
+            zoomToContent();
         }
     }
 
     private void drawSnake(GeometryFactory geometryFactory) {
-        LineString line = geometryFactory.createLineString(updates.toArray(
-                new Coordinate[0]));
-        line = (LineString) DouglasPeuckerSimplifier.simplify(line, 0.001);
-        if (snake != null) {
-            removeComponent(snake);
+        if (updates.size() > 2) {
+            LineString line = geometryFactory.createLineString(updates.toArray(
+                    new Coordinate[0]));
+            line = (LineString) DouglasPeuckerSimplifier.simplify(line, 0.001);
+            if (snake != null) {
+                removeComponent(snake);
+            }
+            snake = new LPolyline(line);
+            addLayer(snake);
         }
-        snake = new LPolyline(line);
-        addLayer(snake);
     }
 
     private void updateHead(Update update) {
@@ -129,11 +133,10 @@ public class LiveMap extends LMap implements UIEvents.PollListener {
         if (appService.getLastUpdate() != null && appService.getLastUpdate() != lastUpdate) {
             final Update latest = repo.findOne(appService.getLastUpdate());
             addPoint(latest);
-            zoomToContent();
         }
     }
 
-    public void showLastUpdate() {
+    void centerToLastPoint() {
         if (appService.getLastUpdate() != null) {
             final Update latest = repo.findOne(appService.getLastUpdate());
             if (latest != null) {
