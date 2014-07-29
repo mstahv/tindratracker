@@ -14,7 +14,7 @@
         <start-class>org.vaadin.tindra.Application</start-class>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <version.vaadin>7.2.3</version.vaadin>
+        <version.vaadin>7.2.5</version.vaadin>
         <vaadin.plugin.version>${version.vaadin}</vaadin.plugin.version>
         <geotools.version>10.2</geotools.version>
     </properties>
@@ -61,7 +61,7 @@
         <dependency>
             <groupId>com.vaadin.addon</groupId>
             <artifactId>vaadin-touchkit-agpl</artifactId>
-            <version>4.0.0-SNAPSHOT</version>
+            <version>4.0.0.beta2</version>
         </dependency>
         <dependency>
             <groupId>com.vaadin</groupId>
