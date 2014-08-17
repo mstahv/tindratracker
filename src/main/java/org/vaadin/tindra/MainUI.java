@@ -14,10 +14,6 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.UI;
-import java.text.DateFormat;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
-import java.text.SimpleDateFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -30,6 +26,11 @@ import org.vaadin.tindra.backend.AppService;
 import org.vaadin.tindra.backend.UpdateRepository;
 import org.vaadin.tindra.domain.Update;
 import org.vaadin.tindra.tcpserver.Server;
+
+import java.text.DateFormat;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 
 /**
  *
@@ -124,8 +125,8 @@ public class MainUI extends UI implements UIEvents.PollListener {
     }
 
     private void updateBoatData() {
-        if (appService.getLastUpdate() != null) {
-            final Update latest = repo.findOne(appService.getLastUpdate());
+        Update latest = appService.getLastUpdate();
+        if (latest != null) {
             speed.setValue("" + speedFormat.format(latest.getSpeed()) + " kts");
             course.setValue("" + angleFormat.format(latest.getCourse()) + " °");
         } else {
@@ -136,8 +137,8 @@ public class MainUI extends UI implements UIEvents.PollListener {
     }
 
     private void updateStatusData() {
-        if (appService.getLastUpdate() != null) {
-            final Update latest = repo.findOne(appService.getLastUpdate());
+        Update latest = appService.getLastUpdate();
+        if (latest != null) {
             fixCount.setFilledBars(levelFromFixCoun(latest.getFixCount()));
             batteryLevel.setFilledBars(
                     levelFromBattery(latest.getBatteryLevel()));

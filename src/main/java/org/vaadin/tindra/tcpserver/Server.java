@@ -1,18 +1,19 @@
 package org.vaadin.tindra.tcpserver;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.vaadin.tindra.backend.AppService;
+import org.vaadin.tindra.backend.UpdateRepository;
+import org.vaadin.tindra.domain.Update;
+
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.vaadin.tindra.backend.AppService;
-import org.vaadin.tindra.backend.UpdateRepository;
-import org.vaadin.tindra.domain.Update;
 
 /**
  * Created by se on 19/06/14.
@@ -80,7 +81,7 @@ public class Server {
 
     void persist(Update update) {
         Update saved = repo.save(update);
-        appService.setLastUpdate(saved.getId());
+        appService.setLastUpdate(saved);
     }
 
 }
