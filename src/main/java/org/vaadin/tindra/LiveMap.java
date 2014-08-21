@@ -16,13 +16,13 @@ import org.vaadin.spring.UIScope;
 import org.vaadin.spring.VaadinComponent;
 import org.vaadin.spring.events.EventBus;
 import org.vaadin.tindra.backend.AppService;
+import org.vaadin.tindra.backend.TrackerRepository;
 import org.vaadin.tindra.backend.UpdateRepository;
+import org.vaadin.tindra.domain.Tracker;
 import org.vaadin.tindra.domain.Update;
 
 import javax.annotation.PostConstruct;
-import java.util.Calendar;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 /**
  *
@@ -40,12 +40,16 @@ public class LiveMap extends LMap implements UIEvents.PollListener {
     UpdateRepository repo;
 
     @Autowired
+    TrackerRepository repo2;
+
+    @Autowired
     EventBus bus;
 
     private LPolyline snake;
     private LCircleMarker marker;
 
-    private final LinkedList<Coordinate> updates = new LinkedList<>();
+    // Imei to update list mapping
+    private final Map<String,LinkedList<Coordinate>> trackerUpdates = new HashMap<>();
 
     private final GeometryFactory geometryFactory = JTSFactoryFinder.
             getGeometryFactory(
@@ -71,30 +75,33 @@ public class LiveMap extends LMap implements UIEvents.PollListener {
 
         Calendar cal = Calendar.getInstance();
         cal.roll(Calendar.DATE, -7);
-        List<Update> content = repo.
-                findByTimestampGreaterThanOrderByTimestampDesc(cal.getTime());
-//        List<Update> content = repo.findAll(new PageRequest(0, 10, new Sort(
-//                Direction.DESC, "timestamp"))).getContent();
-        boolean first = true;
-        LineString ls = null;
-        for (Update update : content) {
-            updates.addFirst(new Coordinate(update.getLon(), update.getLat()));
-            if (first) {
-                updateHead(update);
-                first = false;
-                setCenter(new Point(update.getLat(), update.getLon()));
+
+        List<Tracker> trackers = repo2.findAll();
+        for(Tracker tracker: trackers) {
+            List<Update> content = repo.
+                    findByTimestampGreaterThanAndImeiOrderByTimestampDesc(cal.getTime(), tracker.getImei());
+            boolean first = true;
+            for (Update update : content) {
+                LinkedList<Coordinate> updates = getOrCreateUpdates(tracker.getImei());
+
+                updates.addFirst(new Coordinate(update.getLon(), update.getLat()));
+                if (first) {
+                    updateHead(update);
+                    setCenter(new Point(update.getLat(), update.getLon()));
+                    first = false;
+                }
             }
         }
 
         if (marker != null) {
-            drawSnake(geometryFactory);
-            if (updates.size() > 1) {
-                zoomToContent();
+            for(Tracker tracker: trackers) {
+                drawSnake(tracker);
             }
         }
     }
 
-    private void drawSnake(GeometryFactory geometryFactory) {
+    private void drawSnake(Tracker tracker) {
+        LinkedList<Coordinate> updates = getOrCreateUpdates(tracker.getImei());
         if (updates.size() > 2) {
             LineString line = geometryFactory.createLineString(updates.toArray(
                     new Coordinate[0]));
@@ -123,11 +130,34 @@ public class LiveMap extends LMap implements UIEvents.PollListener {
 
     private void addPoint(Update u) {
         updateHead(u);
+
+        LinkedList<Coordinate> updates = getOrCreateUpdates(u.getImei());
         updates.add(new Coordinate(u.getLon(), u.getLat()));
         if (updates.size() > 20) {
             updates.remove();
         }
-        drawSnake(geometryFactory);
+        drawSnake(getOrCreateTracker(u.getImei()));
+    }
+
+    private LinkedList<Coordinate> getOrCreateUpdates(String imei) {
+
+        LinkedList<Coordinate> updates = trackerUpdates.get(imei);
+        if (updates == null) {
+            updates = new LinkedList<>();
+            trackerUpdates.put(imei,updates);
+        }
+        return updates;
+    }
+
+    private Tracker getOrCreateTracker(String imei) {
+        Tracker t = repo2.getByImei(imei);
+        if (t == null) {
+            t = new Tracker();
+            t.setImei(imei);
+            t.setName("[Unknown tracker]");
+            t = repo2.save(t);
+        }
+        return t;
     }
 
     @Override

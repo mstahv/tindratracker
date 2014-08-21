@@ -6,19 +6,26 @@
 package org.vaadin.tindra.backend;
 
 import org.springframework.stereotype.Service;
+import org.vaadin.tindra.domain.Tracker;
 import org.vaadin.tindra.domain.Update;
 
 @Service
 public class AppService {
-    
+
+    private Tracker lastUpdateTracker;
     private Update lastUpdate;
 
     public Update getLastUpdate() {
         return lastUpdate;
     }
 
-    public void setLastUpdate(Update lastUpdate) {
+    public Tracker getLastUpdatedTracker() {
+        return lastUpdateTracker;
+    }
+
+    public void setLastUpdate(Tracker tracker, Update lastUpdate) {
         this.lastUpdate = lastUpdate;
+        this.lastUpdateTracker = tracker;
     }
     
 }

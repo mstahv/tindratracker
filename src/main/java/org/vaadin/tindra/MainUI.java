@@ -23,7 +23,9 @@ import org.vaadin.maddon.button.MButton;
 import org.vaadin.maddon.fields.MTable;
 import org.vaadin.spring.touchkit.TouchKitUI;
 import org.vaadin.tindra.backend.AppService;
+import org.vaadin.tindra.backend.TrackerRepository;
 import org.vaadin.tindra.backend.UpdateRepository;
+import org.vaadin.tindra.domain.Tracker;
 import org.vaadin.tindra.domain.Update;
 import org.vaadin.tindra.tcpserver.Server;
 
@@ -48,12 +50,15 @@ public class MainUI extends UI implements UIEvents.PollListener {
     UpdateRepository repo;
 
     @Autowired
+    TrackerRepository repo2;
+
+    @Autowired
     LiveMap liveMap;
 
     @Autowired
     AppService appService;
 
-    NavigationButton listLastPoints = new NavigationButton();
+    NavigationButton listTrackers = new NavigationButton();
     Button trackBoat = new MButton(FontAwesome.CROSSHAIRS, this::trackBoat);
 
     Label speed = new Label(" - ");
@@ -75,7 +80,7 @@ public class MainUI extends UI implements UIEvents.PollListener {
         NavigationView navigationView = new NavigationView("Tindra");
 
         navigationView.setLeftComponent(trackBoat);
-        navigationView.setRightComponent(listLastPoints);
+        navigationView.setRightComponent(listTrackers);
 
         // Overlay display for data
         speed.setCaption("Speed");
@@ -97,14 +102,11 @@ public class MainUI extends UI implements UIEvents.PollListener {
         navigationManager.navigateTo(navigationView);
         setContent(navigationManager);
 
-        // listLastPoints.setIcon(FontAwesome.BARS); // FIXME, this looks bad
-        listLastPoints.setCaption("Last points");
-        listLastPoints.addClickListener(e -> {
+        // listTrackers.setIcon(FontAwesome.BARS); // FIXME, this looks bad
+        listTrackers.setCaption("Trackers");
+        listTrackers.addClickListener(e -> {
             // FIXME reusing the same view seems to be broken in latest touchkit
-            navigationManager.navigateTo(new TabularView(repo.findAll(
-                    new PageRequest(0, 100, new Sort(
-                                    Sort.Direction.DESC, "timestamp"))).
-                    getContent()));
+            navigationManager.navigateTo(new TrackerListView(repo2.findAll()));
         });
 
         getUI().setPollInterval(5000);
@@ -129,10 +131,14 @@ public class MainUI extends UI implements UIEvents.PollListener {
         if (latest != null) {
             speed.setValue("" + speedFormat.format(latest.getSpeed()) + " kts");
             course.setValue("" + angleFormat.format(latest.getCourse()) + " °");
+
+            Tracker tracker = repo2.getByImei(latest.getImei());
+            navigationManager.setCaption(tracker.getName());
         } else {
             speed.setValue("-.-- kts");
             course.setValue("--- °");
             fixCount.setFilledBars(0);
+            navigationManager.setCaption("<no device>");
         }
     }
 
@@ -191,7 +197,7 @@ public class MainUI extends UI implements UIEvents.PollListener {
         popover.setModal(true);
         popover.setWidth("80%");
         popover.setHeight("80%");
-        popover.showRelativeTo(listLastPoints);
+        popover.showRelativeTo(listTrackers);
     }
 
     @Override

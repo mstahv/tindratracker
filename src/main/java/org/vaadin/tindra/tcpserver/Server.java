@@ -3,7 +3,9 @@ package org.vaadin.tindra.tcpserver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.vaadin.tindra.backend.AppService;
+import org.vaadin.tindra.backend.TrackerRepository;
 import org.vaadin.tindra.backend.UpdateRepository;
+import org.vaadin.tindra.domain.Tracker;
 import org.vaadin.tindra.domain.Update;
 
 import javax.annotation.PostConstruct;
@@ -23,7 +25,10 @@ public class Server {
 
     @Autowired
     UpdateRepository repo;
-    
+
+    @Autowired
+    TrackerRepository repo2;
+
     @Autowired
     AppService appService;
 
@@ -81,7 +86,18 @@ public class Server {
 
     void persist(Update update) {
         Update saved = repo.save(update);
-        appService.setLastUpdate(saved);
+
+        Tracker tracker = repo2.getByImei(update.getImei());
+        if (tracker == null) {
+            tracker = new Tracker();
+            tracker.setImei(update.getImei());
+            tracker.setName("[unknown device]");
+        }
+
+        tracker.setLastSeen(update.getTimestamp());
+        tracker = repo2.save(tracker);
+        appService.setLastUpdate(tracker,saved);
+
     }
 
 }
