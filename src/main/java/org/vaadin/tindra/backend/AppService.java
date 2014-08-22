@@ -6,17 +6,18 @@
 package org.vaadin.tindra.backend;
 
 import org.springframework.stereotype.Service;
+import org.vaadin.tindra.domain.Update;
 
 @Service
 public class AppService {
     
-    private Long lastUpdate;
+    private Update lastUpdate;
 
-    public Long getLastUpdate() {
+    public Update getLastUpdate() {
         return lastUpdate;
     }
 
-    public void setLastUpdate(Long lastUpdate) {
+    public void setLastUpdate(Update lastUpdate) {
         this.lastUpdate = lastUpdate;
     }
     

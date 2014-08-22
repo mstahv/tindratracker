@@ -31,7 +31,7 @@ import java.util.List;
 @VaadinComponent
 public class LiveMap extends LMap implements UIEvents.PollListener {
 
-    long lastUpdate;
+    long lastUpdateId;
 
     @Autowired
     AppService appService;
@@ -88,7 +88,9 @@ public class LiveMap extends LMap implements UIEvents.PollListener {
 
         if (marker != null) {
             drawSnake(geometryFactory);
-            zoomToContent();
+            if (updates.size() > 1) {
+                zoomToContent();
+            }
         }
     }
 
@@ -116,7 +118,7 @@ public class LiveMap extends LMap implements UIEvents.PollListener {
         } else {
             marker.setPoint(new Point(update.getLat(), update.getLon()));
         }
-        lastUpdate = update.getId();
+        lastUpdateId = update.getId();
     }
 
     private void addPoint(Update u) {
@@ -130,18 +132,16 @@ public class LiveMap extends LMap implements UIEvents.PollListener {
 
     @Override
     public void poll(UIEvents.PollEvent event) {
-        if (appService.getLastUpdate() != null && appService.getLastUpdate() != lastUpdate) {
-            final Update latest = repo.findOne(appService.getLastUpdate());
+        final Update latest = appService.getLastUpdate();
+        if (latest != null && latest.getId() != lastUpdateId) {
             addPoint(latest);
         }
     }
 
     void centerToLastPoint() {
-        if (appService.getLastUpdate() != null) {
-            final Update latest = repo.findOne(appService.getLastUpdate());
-            if (latest != null) {
-                setCenter(latest.getLat(), latest.getLon());
-            }
+        Update latest = appService.getLastUpdate();
+        if (latest != null) {
+            setCenter(latest.getLat(), latest.getLon());
         }
     }
 }
