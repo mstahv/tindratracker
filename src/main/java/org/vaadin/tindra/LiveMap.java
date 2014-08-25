@@ -31,6 +31,12 @@ import java.util.*;
 @VaadinComponent
 public class LiveMap extends LMap implements UIEvents.PollListener {
 
+    private static String[] TRACKER_COLORS = new String[] {
+      "#a00",
+      "#0a0",
+      "#00a"
+    };
+
     long lastUpdateId;
 
     @Autowired
@@ -86,7 +92,7 @@ public class LiveMap extends LMap implements UIEvents.PollListener {
 
                 updates.addFirst(new Coordinate(update.getLon(), update.getLat()));
                 if (first) {
-                    updateHead(update);
+                    updateHead(tracker,update);
                     setCenter(new Point(update.getLat(), update.getLon()));
                     first = false;
                 }
@@ -110,14 +116,20 @@ public class LiveMap extends LMap implements UIEvents.PollListener {
                 removeComponent(snake);
             }
             snake = new LPolyline(line);
+            snake.setFillColor(getColor(tracker));
             addLayer(snake);
         }
     }
 
-    private void updateHead(Update update) {
+    private String getColor(Tracker tracker) {
+        return TRACKER_COLORS[(int)(tracker.getId() % TRACKER_COLORS.length)];
+    }
+
+    private void updateHead(Tracker tracker, Update update) {
         if (marker == null) {
             marker = new LCircleMarker(new Point(update.getLat(), update.
                     getLon()), 10);
+            marker.setFillColor(getColor(tracker));
             snake = new LPolyline(new Point(update.getLat(), update.
                     getLon()));
             addLayer(snake);
@@ -129,14 +141,16 @@ public class LiveMap extends LMap implements UIEvents.PollListener {
     }
 
     private void addPoint(Update u) {
-        updateHead(u);
 
+        Tracker tracker = getOrCreateTracker(u.getImei());
+
+        updateHead(tracker,u);
         LinkedList<Coordinate> updates = getOrCreateUpdates(u.getImei());
         updates.add(new Coordinate(u.getLon(), u.getLat()));
         if (updates.size() > 20) {
             updates.remove();
         }
-        drawSnake(getOrCreateTracker(u.getImei()));
+        drawSnake(tracker);
     }
 
     private LinkedList<Coordinate> getOrCreateUpdates(String imei) {

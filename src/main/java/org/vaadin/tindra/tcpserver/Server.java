@@ -52,7 +52,8 @@ public class Server {
     public void start() {
 
         running = true;
-        
+
+        // Clean up some misinformation
         List<Update> invalidNewerThanNow = repo.findByTimestampGreaterThanOrderByTimestampDesc( new Date());
         repo.deleteInBatch(invalidNewerThanNow);
 
