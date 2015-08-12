@@ -1,6 +1,7 @@
 package org.vaadin.tindra;
 
 import com.vaadin.event.UIEvents;
+import com.vaadin.spring.annotation.UIScope;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
@@ -12,8 +13,6 @@ import org.vaadin.addon.leaflet.LMap;
 import org.vaadin.addon.leaflet.LOpenStreetMapLayer;
 import org.vaadin.addon.leaflet.LPolyline;
 import org.vaadin.addon.leaflet.shared.Point;
-import org.vaadin.spring.UIScope;
-import org.vaadin.spring.VaadinComponent;
 import org.vaadin.spring.events.EventBus;
 import org.vaadin.tindra.backend.AppService;
 import org.vaadin.tindra.backend.UpdateRepository;
@@ -23,12 +22,13 @@ import javax.annotation.PostConstruct;
 import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.List;
+import org.springframework.stereotype.Component;
 
 /**
  *
  */
 @UIScope
-@VaadinComponent
+@Component
 public class LiveMap extends LMap implements UIEvents.PollListener {
 
     long lastUpdateId;
@@ -40,7 +40,7 @@ public class LiveMap extends LMap implements UIEvents.PollListener {
     UpdateRepository repo;
 
     @Autowired
-    EventBus bus;
+    EventBus.UIEventBus bus;
 
     private LPolyline snake;
     private LCircleMarker marker;
