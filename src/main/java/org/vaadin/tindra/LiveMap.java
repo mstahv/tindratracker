@@ -1,6 +1,8 @@
 package org.vaadin.tindra;
 
 import com.vaadin.event.UIEvents;
+import com.vaadin.spring.annotation.SpringComponent;
+import com.vaadin.spring.annotation.UIScope;
 import com.vividsolutions.jts.geom.Coordinate;
 import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.geom.LineString;
@@ -12,9 +14,6 @@ import org.vaadin.addon.leaflet.LMap;
 import org.vaadin.addon.leaflet.LOpenStreetMapLayer;
 import org.vaadin.addon.leaflet.LPolyline;
 import org.vaadin.addon.leaflet.shared.Point;
-import org.vaadin.spring.UIScope;
-import org.vaadin.spring.VaadinComponent;
-import org.vaadin.spring.events.EventBus;
 import org.vaadin.tindra.backend.AppService;
 import org.vaadin.tindra.backend.TrackerRepository;
 import org.vaadin.tindra.backend.UpdateRepository;
@@ -28,7 +27,7 @@ import java.util.*;
  *
  */
 @UIScope
-@VaadinComponent
+@SpringComponent
 public class LiveMap extends LMap implements UIEvents.PollListener {
 
     private static String[] TRACKER_COLORS = new String[] {
@@ -48,8 +47,8 @@ public class LiveMap extends LMap implements UIEvents.PollListener {
     @Autowired
     TrackerRepository repo2;
 
-    @Autowired
-    EventBus bus;
+//    @Autowired
+//    EventBus bus;
 
     private LPolyline snake;
     private LCircleMarker marker;

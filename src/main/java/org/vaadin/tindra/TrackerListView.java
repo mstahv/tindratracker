@@ -2,7 +2,7 @@ package org.vaadin.tindra;
 
 import com.vaadin.addon.touchkit.ui.NavigationView;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.vaadin.maddon.fields.MTable;
+import org.vaadin.viritin.fields.MTable;
 import org.vaadin.tindra.backend.UpdateRepository;
 import org.vaadin.tindra.domain.Tracker;
 

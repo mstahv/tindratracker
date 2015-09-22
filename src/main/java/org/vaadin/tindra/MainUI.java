@@ -10,6 +10,7 @@ import com.vaadin.annotations.Widgetset;
 import com.vaadin.event.UIEvents;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.server.VaadinRequest;
+import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.Label;
@@ -19,9 +20,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.vaadin.addon.leaflet.shared.Point;
 import org.vaadin.addon.levelindicator.Levelindicator;
-import org.vaadin.maddon.button.MButton;
-import org.vaadin.maddon.fields.MTable;
-import org.vaadin.spring.touchkit.TouchKitUI;
+import org.vaadin.viritin.button.MButton;
+import org.vaadin.viritin.fields.MTable;
 import org.vaadin.tindra.backend.AppService;
 import org.vaadin.tindra.backend.TrackerRepository;
 import org.vaadin.tindra.backend.UpdateRepository;
@@ -37,7 +37,7 @@ import java.text.SimpleDateFormat;
 /**
  *
  */
-@TouchKitUI
+@SpringUI
 @Title("Tindra Tracker")
 @Widgetset("org.vaadin.tindra.AppWidgetSet")
 @Theme("tindra")

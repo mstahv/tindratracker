@@ -5,12 +5,14 @@ div.dataoverlay {
     position: absolute;
     left: 10px;
     top: 80px;
+    z-index: 1000;
 }
 
 div.statusoverlay {
     position: absolute;
     left: 10px;
     bottom: 20px;
+    z-index: 1000;
 }
 
 .dataoverlay .v-label,
