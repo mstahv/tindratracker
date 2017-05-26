@@ -14,7 +14,7 @@
         <start-class>org.vaadin.tindra.Application</start-class>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <version.vaadin>7.4.8</version.vaadin>
+        <version.vaadin>7.7.9</version.vaadin>
         <vaadin.plugin.version>${version.vaadin}</vaadin.plugin.version>
         <geotools.version>10.2</geotools.version>
     </properties>
@@ -22,19 +22,19 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>1.2.5.RELEASE</version>
+        <version>1.4.6.RELEASE</version>
     </parent>
 
     <dependencies>
         <dependency>
             <groupId>org.vaadin.spring.extensions</groupId>
             <artifactId>vaadin-spring-ext-boot</artifactId>
-            <version>0.0.7-SNAPSHOT</version>
+            <version>0.0.7.RELEASE</version>
         </dependency>
         <dependency>
             <groupId>org.vaadin.spring.addons</groupId>
             <artifactId>vaadin-spring-addon-eventbus</artifactId>
-            <version>0.0.7-SNAPSHOT</version>
+            <version>0.0.7.RELEASE</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -60,12 +60,12 @@
         <dependency>
             <groupId>com.vaadin</groupId>
             <artifactId>vaadin-spring</artifactId>
-            <version>1.0.0.beta3</version>
+            <version>1.2.0</version>
         </dependency>
         <dependency>
             <groupId>com.vaadin.addon</groupId>
             <artifactId>vaadin-touchkit-agpl</artifactId>
-            <version>4.0.2</version>
+            <version>4.1.0</version>
         </dependency>
         <dependency>
             <groupId>com.vaadin</groupId>
@@ -90,13 +90,13 @@
         <dependency>
             <groupId>org.vaadin.addon</groupId>
             <artifactId>v-leaflet</artifactId>
-            <version>0.6.4</version>
+            <version>1.0.3</version>
         </dependency>
                 
         <dependency>
             <groupId>org.vaadin</groupId>
             <artifactId>viritin</artifactId>
-            <version>1.35</version>
+            <version>1.61</version>
         </dependency>
 
         <dependency>
@@ -149,63 +149,14 @@
                 <groupId>com.vaadin</groupId>
                 <artifactId>vaadin-maven-plugin</artifactId>
                 <version>${vaadin.plugin.version}</version>
-                <configuration>
-                    <extraJvmArgs>-Xmx1g -Xss1024k</extraJvmArgs>
-
-                    <!-- We are doing "inplace" gwt compilation
-                    but into subdir VAADIN/widgetsets -->
-                    <webappDirectory>${basedir}/src/main/public/VAADIN/widgetsets
-                    </webappDirectory>
-                    <hostedWebapp>${basedir}/src/main/public/VAADIN/widgetsets
-                    </hostedWebapp>
-                    <noServer>true</noServer>
-                    <!-- Remove draftCompile when project is ready -->
-                    <draftCompile>false</draftCompile>
-                    <persistentunitcachedir>${project.build.directory}/gwtdirt</persistentunitcachedir>
-                    <compileReport>false</compileReport>
-                    <style>OBF</style>
-                    <strict>true</strict>
-                    <!-- Symbol maps etc, not needed in vaadin app, just target them outside war -->
-                    <deploy>${project.build.directory}/gwt-deploy</deploy>
-                </configuration>
                 <executions>
                     <execution>
-                        <configuration>
-                            <!-- if you don't specify any modules, the plugin will find them -->
-                            <!-- <modules> <module>com.vaadin.demo.mobilemail.gwt.ColorPickerWidgetSet</module> 
-                            </modules> -->
-                        </configuration>
                         <goals>
                             <goal>clean</goal>
                             <goal>resources</goal>
-                            <!-- These are non functional currently with spring boot directory structure
-                            <goal>update-theme</goal>
-                            <goal>update-widgetset</goal>-->
                             <goal>compile-theme</goal>
                             <goal>compile</goal>
                         </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <artifactId>maven-resources-plugin</artifactId>
-                <executions>
-                    <!-- ensure fresly compiled widgetset to jar, TODO check 
-                    vaadin plugin configuration could get rid of this -->
-                    <execution>
-                        <id>copy-resources</id>
-                        <phase>prepare-package</phase>
-                        <goals>
-                            <goal>copy-resources</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${basedir}/target/classes/VAADIN</outputDirectory>
-                            <resources>
-                                <resource>
-                                    <directory>${basedir}/src/main/public/VAADIN</directory>
-                                </resource>
-                            </resources>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>
@@ -249,17 +200,6 @@
         <repository>
             <id>vaadin-addons</id>
             <url>http://maven.vaadin.com/vaadin-addons</url>
-        </repository>
-
-        <repository>
-            <id>sonatype-snapshots</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
         </repository>
 
     </repositories>
