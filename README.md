@@ -38,7 +38,7 @@ You can now access the web server at http://localhost:9090
 
 ## Configuring the TK201 GPS Tracker device
 
-To configure the the TK102 to use the GPRS reporting with your server,
+To configure the TK102 to use the GPRS reporting with your server,
 send the following SMS configuration commands to the device:
 
 ```
